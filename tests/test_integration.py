@@ -277,7 +277,8 @@ def test_stage_refuses_bad_targets_before_touching_anything(tmp_path):
 
 def test_stage_uploads_exactly_the_runtime_and_owns_only_its_own(tmp_path):
     """Nothing inside the stage but the runtime (atira test-run uploads every file it finds); a refused
-    re-stage keeps the old stage whole; a clean one replaces even our own extras."""
+    re-stage keeps the old stage whole, and even our own marked stage is only replaced while it still holds
+    exactly the planned runtime — content added since is refused and preserved, never deleted."""
     good = _synthetic_release_root(tmp_path)
     stage = tmp_path / "stage"
     package_release.stage(stage, good)
@@ -287,12 +288,30 @@ def test_stage_uploads_exactly_the_runtime_and_owns_only_its_own(tmp_path):
     assert (tmp_path / f"stage{package_release.STAGE_META_SUFFIX}").exists()  # ownership lives BESIDE the stage
     assert not any(stage.rglob("__pycache__"))  # an AST parse, not compileall
 
-    (stage / "junk.txt").write_text("junk")  # an extra left in our own stage
+    (stage / "junk.txt").write_text("junk")  # an extra added to our own stage after the marker
     broken = _synthetic_release_root(tmp_path, name="broken-src")
     (broken / "atira_agent" / "__init__.py").write_text("def broken(:\n")
     with pytest.raises(package_release.PackageError, match="does not parse"):
         package_release.stage(stage, broken)
     assert (stage / "junk.txt").exists() and (stage / "agent.py").exists()  # refused build touched nothing
+    # our own marker proves who made the folder, not what it holds NOW: extras are refused whole, kept alive
+    with pytest.raises(package_release.PackageError, match="we did not stage"):
+        package_release.stage(stage, good)
+    assert (stage / "junk.txt").read_text() == "junk" and (stage / "agent.py").exists()
+    (stage / "junk.txt").unlink()  # re-stage proceeds only once the human content is gone
     package_release.stage(stage, good)
-    assert not (stage / "junk.txt").exists() and (stage / "agent.py").exists()
     assert package_release.check(stage)["count"] == len(package_release.plan(good)["files"])
+
+
+def test_stage_keeps_human_additions_inside_a_marked_stage(tmp_path):
+    """Root-proven data loss at 9ec6f53: a notes file added later inside OUR marked stage was rmtree'd.
+    The marker must never license deleting content the packager did not stage — file OR directory."""
+    good = _synthetic_release_root(tmp_path)
+    stage = tmp_path / "stage"
+    package_release.stage(stage, good)
+    (stage / "human-notes.txt").write_text("do not delete me")
+    (stage / "my-plans").mkdir()
+    with pytest.raises(package_release.PackageError, match="human-notes.txt"):
+        package_release.stage(stage, good)
+    assert (stage / "human-notes.txt").read_text() == "do not delete me"
+    assert (stage / "my-plans").is_dir() and (stage / "agent.py").exists()

@@ -32,7 +32,8 @@ PACKAGE_DIR = "atira_agent"
 # the package modules the runtime imports at startup: a release missing one would crash the run on import, so
 # `plan` refuses an incomplete tree and `check` refuses a folder or tarball that does not carry the full set.
 REQUIRED_PACKAGE_MODULES = ("__init__.py", "contracts.py", "documents.py", "events.py", "evidence.py",
-                            "pricing.py", "runtime.py", "runtime_browser.py", "runtime_models.py")
+                             "pricing.py", "runtime.py", "runtime_browser.py", "runtime_models.py",
+                             "runtime_submission.py")
 ALLOWED_SUFFIXES = (".py", ".json", ".toml", ".lock")
 # a file whose path contains any of these is refused even if the allowlist would take it
 FORBIDDEN_WORDS = (".git", ".entire", ".agents", ".opencode", ".dev-input", ".dev-runs", "credential", "secret",
@@ -169,8 +170,9 @@ def stage(out: Path, root: Path = ROOT) -> dict:
     """Copy the plan into a clean staging directory: guard the target first, build elsewhere, swap last.
 
     Nothing is deleted before it is proven replaceable, so a bad --out (the source root, an ancestor, a symlink,
-    or a folder with someone else's files in it) cannot destroy anything. Once the target is proven ours, any
-    extras found in it are dropped, not merged into the new build. The ownership record lives beside the stage,
+    or a folder with someone else's files in it) cannot destroy anything. Even our own marked stage is only
+    replaced while it still holds EXACTLY the runtime: a file anyone added since the marker was written is
+    foreign content and the stage is refused whole, never rmtree'd. The ownership record lives beside the stage,
     never inside it (`atira test-run` uploads every file in the folder).
     """
     import os as _os
@@ -216,7 +218,21 @@ def stage(out: Path, root: Path = ROOT) -> dict:
             _reject(str(out), f"staged tree holds something unplanned: {sorted(extra)}")
         for path in sorted(build.rglob("*.py")):
             _parseable(path)
-        if ours:  # ours: extras cannot sneak in through the rename — drop them, then swap
+        if ours:
+            # The marker proves who CREATED the folder, not what it holds NOW. Anyone could have added content
+            # since; only a stage that still holds EXACTLY the runtime (plus its planned dirs, no symlinks) may
+            # be replaced — foreign additions are refused whole and kept alive, never rmtree'd.
+            keepable = {f["path"] for f in listing["files"]}
+            if any(p.is_symlink() for p in out.rglob("*")):
+                _reject(str(out), "is our own stage but now contains a symlink; refusing to follow or delete it")
+            expected_dirs = {p.as_posix() for path in keepable for p in Path(path).parents[:-1]}
+            present = {p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file() or p.is_dir()}
+            foreign = sorted(present - keepable - expected_dirs)
+            if foreign:
+                _reject(str(out), "is our own stage but now also holds files we did not stage "
+                                  f"({foreign}); refusing to delete them — remove them yourself or point "
+                                  "--out at a fresh folder")
+            # proven replaceable: swap (nothing foreign can ride along; extras cannot survive the rename)
             shutil.rmtree(out)
         os.replace(build, out)
         _stage_mark(out)

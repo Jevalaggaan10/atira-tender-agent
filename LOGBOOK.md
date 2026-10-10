@@ -100,6 +100,36 @@ and run results, never self-ratings. No verified bid exists yet.
   finalizer repair brief (page-signature stall detection, field-verified current-code entry, compact error
   evidence, honest receipt, generic synthetic tests) queued for the runtime worker. All coordinates/codes
   stay out of Git and prompts.
+- ~19:0x Human priority (latest, binding): FIRST real signed bid regardless of call count; official
+  rules 9/19 explicitly allow omitting unfinished positions and signing the partial — performance
+  work is deferred, and a premature stop for cost is a bug. Third master handoff (prior process stopped
+  at a message boundary; code preserved). Root bootstrapped two fresh isolated workers:
+  browser (dev/browser-repair-qwen: runtime_browser.py + its tests, released by runtime) and submission
+  (dev/submission-repair-qwen: NEW runtime_submission.py exporting the delegated finalize with the
+  seven-stage signing machine). Actor cap holds: master + runtime + browser + submission.
+- ~19:3x Master landed the root-assigned packaging fix on PR #3 (`b68b8b4`): a marked stage that gained
+  any unplanned file/dir/symlink is refused whole and preserved instead of rmtree'd (root-proven data
+  loss at 9ec6f53); runtime_submission.py joined the required package modules. 13/14 integration tests
+  pass on-branch; the 14th plan()s the real tree and passes only on the union gate (merge-order
+  dependency recorded, not hidden). Interop contract `.dev-input/interop-no-bid-attestation.md`:
+  model-facing attest_no_active_match with deterministic evidence-rid validation; code validates refs,
+  model owns the decision; zero internal provenance in the portal payload. Root's six submission
+  must-fixes (tender-bound receipt, real signatures, structured no_bid evidence, jsonschema, value
+  equality, remaining-deadline awaits) forwarded. Old failed run had NO video (404) — diagnostics must
+  come from the new bounded event log, not the old transcript.
+- ~20:2x DIAGNOSTIC RUN `run_9f84f0626f72a192` (unranked, immutable 17-file stage `work/diagnostic-stage-02b`,
+  manifest sha256 2747f123…, recorded in `work/diagnostic-run-02b.json`): ROOT-CANCELLED. All four
+  investigators failed EVERY click/fill with an instant KeyError before the browser was reached. Verified
+  from the immutable source: `_investigate.act` reads `loop["unchanged"]`/`loop["replanned"]` but the new
+  loop state initialises only last_key/last_fp/progress_streak/recoveries/blocked — a guard-state
+  integration crash in runtime.py, invisible to imports, F821-F823 and browser unit stubs. LESSON: static
+  checks do not prove readiness; the accepted regression is a synthetic investigator ACT tool invocation
+  through the captured QwenAgent proving first click/fill reaches the browser and repeat paths do not
+  KeyError. The old runtime worker exhausted its development steps; root launched a focused hotfix actor
+  (pid 16835, session ses_ed951cf20ffezaca5BJRlufP1T, same worktree, owns runtime.py + test_runtime.py
+  only; master-registered in the bootstrap file). Next immutable stage = the previous 17 files PLUS the
+  reviewed fixed runtime.py ONLY. Smoke proven before launch: full finalizer dispatch action→finish→
+  fresh tender-bound receipt; wrong-tender/wrong-origin rejected; existing receipt prevents double-sign.
 - Facts for the record: platform now allows 5 concurrent test runs (was 4) and exposes own-team field
   breakdown on scored public runs; Clef's typed `decide_typed` helper exists but is NOT called in runtime —
   Clef integration is explicitly incomplete (optional A/B routing after the baseline bid); the platform
@@ -117,3 +147,24 @@ and run results, never self-ratings. No verified bid exists yet.
    approach ⇒ change approach.
 4. First objective proof: component PRs passing the combined gate, then an unranked sandbox measuring
    quality/cost/time. Nothing is "done" before a recorded receipt; no scored submission without the user's yes.
+
+## Resume worktree checkpoint — 2026-10-10
+
+- Active branch: dev/resume-submission-20261010. Work only in this isolated checkout.
+- Diagnostic run run_f78c1833de2e857e failed with no_answer: four workers reached 60 rounds; synthesis exhausted 14 rounds, with 13 evidence reads and no calculator. All 256 model requests returned HTTP 200. No accepted bid or receipt.
+- Demonstrated handoff defect: aggregation drops status/unresolved/blocker. Demonstrated receipt defect: unsigned synthetic form with generic Vorgang/Bestätigung words passes receipt gate.
+- Qwen-only repair workers: completion in resume-submission; receipt in separate resume-receipt. Offline regression tests first; independent review before next source-only unranked sandbox.
+- Baseline suite: 14 passed. This does not establish submission readiness. Entire local enabled; automatic session push disabled.
+- Priority: first verified accepted submission; defer cost and optional features. No ranked release yet.
+
+## Verified GitHub/runtime checkpoint — 2026-10-10 17:40 UTC
+
+- Merged PRs #1 core, #2 development workflow, #4 runtime, #5 receipt finalizer, #6 finalizer contract fix, then #3 integration. Runtime package matches main commit 4abe3c36de23d9b3c68e3f11dae1e14254c710c0 byte-for-byte for all 17 files.
+- Qwen authored application changes and regression tests. Broad OpenCode workers stalled; switched to small direct hosted-Qwen patches. Rejected malformed patches/tests rather than changing production to satisfy incorrect tests.
+- Medium master request exhausted all 16,384 output tokens in reasoning, finish_reason=length, no deliverable; this was not an API/network timeout. A smaller medium review completed. Minor follow-up targeting robustness findings (duplicate sites/non-string needs) remain deferred; no full-plan completion claim.
+- Fixed: aggregation retains status/unresolved/blocker; focused gaps pass through; synthesis sees bounded active evidence inline and shares a three-lookup cap; calculator answer survives stop; site synthesis preserves reserve; research hard cutoff at minute 10. Existing 60/20/14 round ceilings unchanged.
+- Fixed actual finalizer interop: unsupported max_attempts keyword caused TypeError. New test calls actual delegate and reproduces old crash.
+- Receipt gate rejects unsigned forms and negated submission text, requires completed submission language, intended full tender reference and same-origin fresh observation. Nine receipt tests pass.
+- Regression red/green verified against old/new source. Combined full suite and current worktree: 188 passed. Undefined-name checks passed. Semantic progress/recovery improvements from the larger plan remain incomplete; current goal is the first real accepted bid.
+- New unranked sandbox: run_4998be62bccb6414. Source-only stage .dev-runs/resume-02, 17 files, compressed 132.5 KB. Manifest SHA256 9f635998da79ebc933cf502ff91e8ea1669c616ca223ddfcdc5dd6523dd549cd. At this checkpoint: RUNNING, research started, no accepted answer yet. No ranked submission sent.
+- Entire local capture enabled, automatic session push disabled. Private traces and model reasoning remain ignored/local; never publish checkpoint refs.

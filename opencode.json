@@ -2,14 +2,28 @@
   "$schema": "https://opencode.ai/config.json",
   "model": "atira/qwen3.8-flash-next",
   "small_model": "atira/qwen3.8-flash-next",
-  "enabled_providers": ["atira"],
+  "enabled_providers": [
+    "atira"
+  ],
   "share": "disabled",
   "provider": {
     "atira": {
       "npm": "@ai-sdk/openai-compatible",
       "name": "Atira hosted Qwen (free)",
-      "options": {"baseURL": "http://127.0.0.1:8765/qwen/v1", "apiKey": "local", "timeout": 360000},
-      "models": {"qwen3.8-flash-next": {"name": "Qwen3.8-Flash-Next", "limit": {"context": 256000, "output": 16000}}}
+      "options": {
+        "baseURL": "http://127.0.0.1:8765/qwen/v1",
+        "apiKey": "local",
+        "timeout": 360000
+      },
+      "models": {
+        "qwen3.8-flash-next": {
+          "name": "Qwen3.8-Flash-Next",
+          "limit": {
+            "context": 256000,
+            "output": 16000
+          }
+        }
+      }
     }
   },
   "permission": {
@@ -27,6 +41,60 @@
       "env": "deny",
       "printenv*": "deny",
       "atira token*": "deny"
+    },
+    "task": {
+      "*": "deny",
+      "runtime-worker": "allow",
+      "pricing-worker": "allow",
+      "evidence-worker": "allow",
+      "reviewer": "allow"
+    }
+  },
+  "agent": {
+    "orchestrator": {
+      "description": "Plan, delegate, integrate and verify the Atira implementation",
+      "mode": "primary",
+      "model": "atira/qwen3.8-flash-next",
+      "steps": 100,
+      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+    },
+    "runtime-worker": {
+      "description": "Implement model-directed browser runtime and tests",
+      "mode": "subagent",
+      "model": "atira/qwen3.8-flash-next",
+      "steps": 100,
+      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+    },
+    "pricing-worker": {
+      "description": "Implement exact commercial calculator and synthetic tests",
+      "mode": "subagent",
+      "model": "atira/qwen3.8-flash-next",
+      "steps": 100,
+      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+    },
+    "evidence-worker": {
+      "description": "Implement selected document parsing and evidence state",
+      "mode": "subagent",
+      "model": "atira/qwen3.8-flash-next",
+      "steps": 100,
+      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+    },
+    "reviewer": {
+      "description": "Independently review the code and challenge compliance",
+      "mode": "subagent",
+      "model": "atira/qwen3.8-flash-next",
+      "steps": 100,
+      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+    }
+  },
+  "mcp": {
+    "atira": {
+      "type": "local",
+      "command": [
+        "atira",
+        "mcp"
+      ],
+      "enabled": true
     }
   }
 }

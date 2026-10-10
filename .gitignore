@@ -18,3 +18,9 @@ run-data/
 *.zip
 .DS_Store
 dist/
+
+.dev-input/
+.dev-runs/
+.opencode/node_modules/
+.opencode/package.json
+.opencode/bun.lock

@@ -21,10 +21,22 @@ uv run python agent.py
 Scouting uses public, unscored logins. Sandboxed runs attach to the browsers supplied by Atira. The agent applies its own 20-minute limit, including longer rehearsal runs.
 
 ```sh
-uv run pytest
-uv run ruff check .
-atira test-run . --challenge rfq --no-open
+uv run --group dev pytest       # pytest and ruff are dev extras: install them, then keep the tree honest
+uv run --group dev ruff check .
+# allowlisted release tree, then the test run against it (never `.`: it holds docs, tests and run evidence)
+uv run python scripts/package_release.py plan
+uv run python scripts/package_release.py stage --out ../release-stage
+uv run python scripts/package_release.py check --target ../release-stage
+atira test-run ../release-stage --challenge rfq --no-open
 ```
+
+The packager stages exactly the runtime — the seven root files, `agent.json`, `pyproject.toml`, `uv.lock` and the
+reviewed `atira_agent/*.py` set — and nothing else: no docs, tests or evidence, no symlinks, no duplicates, no stray
+safe-extension file. A bad `--out` (the source root, an ancestor, a symlink, or a folder with other files in it) is
+refused before anything is deleted, and a stage we own is rebuilt atomically: an unparsable source keeps the previous
+stage whole. `check` audits a staged folder or a tarball against the same exact set, so an empty or merely tidy
+folder never passes. Staged `.py` files are AST-parsed in place — `compileall` would litter the stage with
+`__pycache__`, and `atira test-run` uploads every file it finds in the staging folder.
 
 The development orchestrator delegates bounded tasks to up to three Atira-hosted Qwen workers and reviews their code and tests. It is separate from the timed Qwen agent. Entire captures development sessions locally; its checkpoint refs and transcripts must not be pushed to this public repository.
 

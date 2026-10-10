@@ -1,0 +1,20 @@
+[project]
+name = "atira-tender-agent"
+version = "0.1.0"
+description = "Model-directed industrial tender investigation and signed bid submission"
+requires-python = ">=3.12"
+# pinned, so the run step gets the versions the kit was tested with
+dependencies = ["openai==2.54.0", "playwright==1.63.0", "jsonschema>=4.23,<5", "pypdf>=6.0,<7", "pypdfium2>=4.30,<6"]
+
+[dependency-groups]
+dev = ["pytest>=8,<10", "pytest-asyncio>=0.24,<2", "ruff>=0.9,<1"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.uv]
+package = false

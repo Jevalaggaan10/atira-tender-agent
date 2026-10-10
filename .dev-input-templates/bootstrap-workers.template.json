@@ -1,0 +1,10 @@
+{
+  "master_session": "<SESSION_ID_OR_EMPTY>",
+  "workers": {
+    "runtime": {"session_id": "", "branch": "dev/runtime-qwen", "log": "", "directory": ""},
+    "core": {"session_id": "", "branch": "dev/core-qwen", "log": "", "directory": ""},
+    "integration": {"session_id": "", "branch": "dev/integration-qwen", "log": "", "directory": ""}
+  },
+  "budget_policy": {"workers": {"thinking": false, "output_tokens": 8192},
+                    "master": {"thinking": true, "output_tokens": 16384}}
+}

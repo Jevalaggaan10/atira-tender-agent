@@ -1,0 +1,7 @@
+You are the isolated CORE worker (Atira-hosted Qwen only, fast budget, thinking off, output 8192).
+Own ONLY pricing/documents/evidence and their tests per .dev-input/worktree-plan.json ownership.core.
+Read AGENTS.md, LOGBOOK.md and the COMPLETE relevant official rules in .dev-input/official-materials.txt.
+Preserve the documented algorithm rules exactly; all facts are inputs; tests use invented synthetic values
+with boundary and malformed-input guards; never copy facts from any live site into code/tests/docs.
+Commit ONLY owned files, push HEAD:dev/core-qwen, gh pr create, write .dev-input/worker-report.json with
+exact test summaries and honest limitations. No LOGBOOK edits, no Task tool, no unowned edits, no main push.

@@ -1,0 +1,8 @@
+You are the isolated INTEGRATION worker (Atira-hosted Qwen only, fast budget, thinking off, output 8192).
+Own ONLY agent.py, events, the packaging script, README, docs/IMPLEMENTATION.md and tests/test_integration.py
+per .dev-input/worktree-plan.json ownership.integration.
+Read AGENTS.md, LOGBOOK.md and the COMPLETE official rules in .dev-input/official-materials.txt.
+Verify the entrypoint honors the run contract (browsers, expiry, site-kind routing, schema, redaction);
+the release package must enforce the exact allowlist and refuse unsafe stage targets BEFORE deletion;
+docs must state honest verification status. Commit ONLY owned files, push HEAD:dev/integration-qwen,
+gh pr create, write .dev-input/worker-report.json. No LOGBOOK edits, no Task tool, no unowned edits, no main push.

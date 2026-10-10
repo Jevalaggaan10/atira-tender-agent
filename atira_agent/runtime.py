@@ -1350,8 +1350,10 @@ async def _finalize_site(brief: str, answer_schema: dict, candidate: dict, sites
         _emit("submission_unavailable", error=type(exc).__name__)
         return RunOutcome(submitted=False, candidate=candidate,
                           reason=f"submission module unavailable: {type(exc).__name__}")
+    # max_attempts is accepted for legacy call-shape compatibility only; the actual
+    # runtime_submission.finalize_site signature does not support it, so it is NOT forwarded.
     return await submission.finalize_site(brief, answer_schema, candidate, sites, by_id, store, budget,
-                                          validation=validation, max_attempts=max_attempts)
+                                          validation=validation)
 
 
 # Generic confirmation/decline words any bid-form receipt or rejection shows: patterns, not scenario facts.

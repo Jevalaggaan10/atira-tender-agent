@@ -55,3 +55,22 @@ async def test_synthesize_priced_answer(monkeypatch):
     assert out["answer"]["total_net"] == 42
     assert INLINE_MARKER in captured["system"]
     assert captured["max_steps"] == 14
+
+
+@pytest.mark.asyncio
+async def test_wrapper_finalizer_contract():
+    """The runtime wrapper must not forward max_attempts to the actual delegate.
+
+    On the old wrapper this raises TypeError (unexpected keyword 'max_attempts');
+    with the fix it delegates cleanly and reports the honest outcome.
+    """
+    from atira_agent.runtime import _finalize_site, RuntimeBudget  # actual runtime module
+
+    budget = RuntimeBudget(1200)
+    outcome = await _finalize_site(
+        "synthetic", {}, {"decision": "bid"}, [], {}, None, budget
+    )
+
+    # Actual delegate with sites=[] returns an unsubmitted RunOutcome.
+    assert outcome.submitted is False
+    assert "no tender portal in this run" in outcome.reason

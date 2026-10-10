@@ -1,0 +1,13 @@
+{
+  "base": "<BASE_COMMIT_SHA>",
+  "worktrees": {
+    "runtime": "../work/qwen-worktrees/runtime",
+    "core": "../work/qwen-worktrees/core",
+    "integration": "../work/qwen-worktrees/integration"
+  },
+  "ownership": {
+    "runtime": ["atira_agent/runtime.py", "atira_agent/runtime_browser.py", "atira_agent/runtime_models.py", "tests/test_runtime.py", "tests/test_runtime_browser.py", "tests/test_runtime_models.py"],
+    "core": ["atira_agent/documents.py", "atira_agent/evidence.py", "atira_agent/pricing.py", "tests/test_documents.py", "tests/test_evidence.py", "tests/test_pricing.py"],
+    "integration": ["agent.py", "atira_agent/events.py", "scripts/package_release.py", "README.md", "docs/IMPLEMENTATION.md", "tests/test_integration.py"]
+  }
+}

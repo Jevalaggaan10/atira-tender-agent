@@ -1,0 +1,8 @@
+You are the isolated RUNTIME worker (Atira-hosted Qwen only, fast budget, thinking off, output 8192).
+Own ONLY the runtime modules and their tests listed in .dev-input/worktree-plan.json ownership.runtime.
+Read AGENTS.md, LOGBOOK.md and the COMPLETE relevant official rules in .dev-input/official-materials.txt.
+Model-directed browser loop only: no scripted click paths, no crawlers, no scenario facts in code/tests/docs.
+Fix demonstrated failures with meaningful synthetic tests; correct fixtures instead of weakening behavior;
+enforce the deadline reserve, stall detection with forced replan, and honest partial-candidate handling.
+Commit ONLY owned files, push HEAD:dev/runtime-qwen, gh pr create, write .dev-input/worker-report.json with
+exact test summary lines and honest limitations. No LOGBOOK edits, no Task tool, no unowned edits, no main push.

@@ -9,6 +9,7 @@
   "provider": {
     "atira": {
       "npm": "@ai-sdk/openai-compatible",
+      "useFunctionCallTools": true,
       "name": "Atira hosted Qwen (free)",
       "options": {
         "baseURL": "http://127.0.0.1:8765/qwen/v1",
@@ -19,8 +20,27 @@
         "qwen3.8-flash-next": {
           "name": "Qwen3.8-Flash-Next",
           "limit": {
-            "context": 256000,
-            "output": 16000
+            "context": 262144,
+            "output": 16384
+          },
+          "options": {
+            "chat_template_kwargs": {
+              "enable_thinking": true
+            }
+          },
+          "variants": {
+            "fast": {
+              "chat_template_kwargs": {
+                "enable_thinking": false
+              },
+              "timeout": 180000
+            },
+            "medium": {
+              "chat_template_kwargs": {
+                "enable_thinking": true
+              },
+              "timeout": 360000
+            }
           }
         }
       }
@@ -28,7 +48,11 @@
   },
   "permission": {
     "*": "allow",
-    "external_directory": "deny",
+    "external_directory": {
+      "*": "deny",
+      "/Users/tamilalagan/Documents/Codex/2026-10-10/let-s-discuss-the-atira-challenge/work/qwen-worktrees/**": "allow",
+      "/Users/tamilalagan/Documents/Codex/2026-10-10/let-s-discuss-the-atira-challenge/atira-tender-agent/**": "allow"
+    },
     "webfetch": "deny",
     "websearch": "deny",
     "bash": {
@@ -40,7 +64,14 @@
       "rm -rf*": "deny",
       "env": "deny",
       "printenv*": "deny",
-      "atira token*": "deny"
+      "atira token*": "deny",
+      "git push origin HEAD:dev/*": "allow",
+      "gh pr create*": "allow",
+      "gh pr view*": "allow",
+      "gh pr list*": "allow",
+      "gh pr diff*": "allow",
+      "gh repo view*": "allow",
+      "gh api repos/anomalyco/opencode/*": "allow"
     },
     "task": {
       "*": "deny",
@@ -55,36 +86,41 @@
       "description": "Plan, delegate, integrate and verify the Atira implementation",
       "mode": "primary",
       "model": "atira/qwen3.8-flash-next",
-      "steps": 100,
-      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+      "steps": 250,
+      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md, LOGBOOK.md and recursive skill. Respect file ownership and separate worker PRs. Latest user: workers lowest reasoning (thinking false), master/reviewer medium budget (thinking true, 16384 output cap). Test actual behavior; never invent verification. No paid fallback. Master alone updates LOGBOOK. Never push Entire refs.",
+      "variant": "medium"
     },
     "runtime-worker": {
       "description": "Implement model-directed browser runtime and tests",
       "mode": "subagent",
       "model": "atira/qwen3.8-flash-next",
-      "steps": 100,
-      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+      "steps": 250,
+      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md, LOGBOOK.md and recursive skill. Respect file ownership and separate worker PRs. Latest user: workers lowest reasoning (thinking false), master/reviewer medium budget (thinking true, 16384 output cap). Test actual behavior; never invent verification. No paid fallback. Master alone updates LOGBOOK. Never push Entire refs.",
+      "variant": "fast"
     },
     "pricing-worker": {
       "description": "Implement exact commercial calculator and synthetic tests",
       "mode": "subagent",
       "model": "atira/qwen3.8-flash-next",
-      "steps": 100,
-      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+      "steps": 250,
+      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md, LOGBOOK.md and recursive skill. Respect file ownership and separate worker PRs. Latest user: workers lowest reasoning (thinking false), master/reviewer medium budget (thinking true, 16384 output cap). Test actual behavior; never invent verification. No paid fallback. Master alone updates LOGBOOK. Never push Entire refs.",
+      "variant": "fast"
     },
     "evidence-worker": {
       "description": "Implement selected document parsing and evidence state",
       "mode": "subagent",
       "model": "atira/qwen3.8-flash-next",
-      "steps": 100,
-      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+      "steps": 250,
+      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md, LOGBOOK.md and recursive skill. Respect file ownership and separate worker PRs. Latest user: workers lowest reasoning (thinking false), master/reviewer medium budget (thinking true, 16384 output cap). Test actual behavior; never invent verification. No paid fallback. Master alone updates LOGBOOK. Never push Entire refs.",
+      "variant": "fast"
     },
     "reviewer": {
       "description": "Independently review the code and challenge compliance",
-      "mode": "subagent",
+      "mode": "all",
       "model": "atira/qwen3.8-flash-next",
-      "steps": 100,
-      "prompt": "Use only Atira-hosted Qwen. Read AGENTS.md and the recursive skill. Respect assigned file ownership. Never publish or expose secrets. Test actual behavior. Do not invent successful verification."
+      "steps": 250,
+      "prompt": "Use only Atira-hosted Qwen (medium budget, thinking on, 16384 output). You are an UNPRIMED independent reviewer: do not read LOGBOOK.md or any prior review notes or run logs; form your own view only from AGENTS.md, the official rules you are pointed at, the diff and the code. Verify claims by running targeted offline checks; never invent verification, never use confidence scores; report only demonstrated issues with file:line and a specific fix. Do not edit files.",
+      "variant": "medium"
     }
   },
   "mcp": {
